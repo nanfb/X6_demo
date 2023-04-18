@@ -1,18 +1,15 @@
 <template>
   <div style="display:flex">
     <div class="layOut">
-      <layout></layout>
+      <layout dowg></layout>
     </div>
-    <div id="container"></div>
+    <div @mouseover="containerOver($event,true)" @mouseout="containerOver($event,false)" id="container"></div>
   </div>
 </template>
 <script>
-import { Graph, Shape } from "@antv/x6";
-import { Dnd } from "@antv/x6-plugin-dnd";
-import layout from "./layout.vue";
-const { Stencil } = Dnd
-const { Rect, Circle } = Shape
-console.log(Stencil)
+import { Graph } from "@antv/x6";
+import { Addon } from "@antv/x6";
+import layout from "./layout";
 export default {
   name: "HelloWorld",
   components: {
@@ -31,12 +28,12 @@ export default {
           label: "hello", // String，节点标签
         },
         {
-          id: "node2", // String，可选，节点的唯一标识
-          x: 100, // Number，必选，节点位置的 x 值
-          y: 100, // Number，必选，节点位置的 y 值
-          width: 80, // Number，可选，节点大小的 width 值
-          height: 40, // Number，可选，节点大小的 height 值
-          label: "zzz", // String，节点标签
+          id: "node2",
+          x: 100,
+          y: 100,
+          width: 80,
+          height: 40,
+          label: "zzz",
         },
       ],
       // 边
@@ -129,6 +126,10 @@ export default {
         shape: "custom-node",
       });
     },
+    containerOver(e, flag){
+      console.log(flag)
+      console.log("containerOver--划入");
+    }
   },
 
   mounted() {

@@ -41,8 +41,8 @@
             <!-- <path class="cls-19"
                 d="M 403.6 571.17 l -10.1 -11 v -77 L 403.6 474 h 63.94 L 481 481.33 V 562 l -16.83 11 S 401.91 571.17 403.6 571.17 Z" /> -->
             <text class="cls-20" transform="translate(431 530.84)">E5</text>
-            <circle class="test" draggable="true" @click="handleMove" cx="50" cy="50" r="40" stroke="black" stroke-width="2"
-                fill="red" />
+            <circle class="test" @mousedown="handleDown" @mousemove="handleMove" cx="50" cy="50" r="40" stroke="black"
+                stroke-width="2" fill="red" />
             <g id="大型设备">
 
                 <!-- 
@@ -69,16 +69,21 @@
 </template>
 <script>
 
-
 export default {
     name: "layout",
     data() {
         return {
-
+            down :false
         };
     },
     methods: {
-        handleMove() {
+        handleDown() {
+            this.handleMove()
+            this.down = true
+        },
+        handleMove(e) {
+            if (!this.down) return
+            this.$emit('move', e)
             console.log("move");
         }
     },
