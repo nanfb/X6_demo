@@ -1,57 +1,152 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div style="display:flex">
+    <div class="layOut">
+      <layout></layout>
+    </div>
+    <div id="container"></div>
   </div>
 </template>
-
 <script>
+import { Graph, Shape } from "@antv/x6";
+import { Dnd } from "@antv/x6-plugin-dnd";
+import layout from "./layout.vue";
+const { Stencil } = Dnd
+const { Rect, Circle } = Shape
+console.log(Stencil)
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
-</script>
+  name: "HelloWorld",
+  components: {
+    layout,
+  },
+  data() {
+    return {
+      // 节点
+      nodes: [
+        {
+          id: "node1", // String，可选，节点的唯一标识
+          x: 0, // Number，必选，节点位置的 x 值
+          y: 0, // Number，必选，节点位置的 y 值
+          width: 80, // Number，可选，节点大小的 width 值
+          height: 40, // Number，可选，节点大小的 height 值
+          label: "hello", // String，节点标签
+        },
+        {
+          id: "node2", // String，可选，节点的唯一标识
+          x: 100, // Number，必选，节点位置的 x 值
+          y: 100, // Number，必选，节点位置的 y 值
+          width: 80, // Number，可选，节点大小的 width 值
+          height: 40, // Number，可选，节点大小的 height 值
+          label: "zzz", // String，节点标签
+        },
+      ],
+      // 边
+      edges: [
+        // {
+        //   source: "node1", // String，必须，起始节点 id
+        // },
+        {
+          source: "node1", // String，必须，起始节点 id
+          target: "node2", // String，必须，目标节点 id
+        },
+      ],
+      graph: {}, //画布
+    };
+  },
+  methods: {
+    // 初始化节点
+    createGraph() {
+      this.graph = new Graph({
+        container: document.getElementById("container"),
+        // width: 800,
+        // height: 600,
+        panning: true,
+        mousewheel: true,
+        grid: true,
+        background: {
+          color: "#ccc", // 设置画布背景颜色
+        },
+      });
+      this.graph.fromJSON({
+        nodes: this.nodes,
+        edges: this.edges,
+      });
+      Graph.registerNode(
+        "custom-node",
+        {
+          markup: [
+            {
+              tagName: "rect",
+              groupSelector: "left",
+              attrs: {
+                x: 424,
+                y: 119.4,
+                width: 9,
+                height: 19.2,
+                transform: "translate(557.5 -299.5) rotate(90)",
+              },
+            },
+            {
+              tagName: "rect",
+              groupSelector: "center",
+              attrs: {
+                x: 431.8,
+                y: 127.8,
+                width: 15,
+                height: 2.4,
+                transform: "translate(568.3 -310.3) rotate(90)",
+              },
+            },
+            {
+              tagName: "rect",
+              groupSelector: "right",
+              attrs: {
+                x: 410.2,
+                y: 127.8,
+                width: 15,
+                height: 2.4,
+                transform: "translate(546.7 -288.7) rotate(90)",
+              },
+            },
+          ],
+          attrs: {
+            left: {
+              fill: "#730000",
+            },
+            center: {
+              fill: "#730000",
+            },
+            right: {
+              fill: "#730000",
+            },
+          },
+        },
+        true
+      );
+      // 添加节点
+      this.graph.addNode({
+        x: 0,
+        y: 0,
+        shape: "custom-node",
+      });
+    },
+  },
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less">
-h3 {
-  margin: 40px 0 0;
+  mounted() {
+    this.createGraph();
+  },
+};
+</script>
+<style lang="less" scoped>
+.layOut {
+  height: 100vh;
+  width: 16%;
+  background-color: rgb(247, 113, 113);
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+
+#container {
+  width: 100%;
+  height: 100vh;
+  flex: 1;
+  background-color: rgb(255, 255, 255);
 }
 </style>
