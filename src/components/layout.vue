@@ -38,32 +38,12 @@
                 <linearGradient id="设备渐变灰色_2-16" x1="637" y1="428.8" x2="652" y2="428.8"
                     gradientTransform="translate(-151.8 -321.8)" xlink:href="#设备渐变灰色_2" />
             </defs>
-            <!-- <path class="cls-19"
-                d="M 403.6 571.17 l -10.1 -11 v -77 L 403.6 474 h 63.94 L 481 481.33 V 562 l -16.83 11 S 401.91 571.17 403.6 571.17 Z" /> -->
-            <text class="cls-20" transform="translate(431 530.84)">E5</text>
-            <circle class="test" @mousedown="handleDown" @mousemove="handleMove" cx="50" cy="50" r="40" stroke="black"
-                stroke-width="2" fill="red" />
-            <g id="大型设备">
-
-                <!-- 
-                <path class="cls-21"
-                    d="M602.6,571.17l-10.1-11v-77L602.6,474h63.94L680,481.33V562l-16.83,11S600.91,571.17,602.6,571.17Z" />
-                <text class="cls-20" transform="translate(630 530.84)">E4</text> -->
-                <!-- <polygon class="cls-22"
-                    points="1303 307 1248.8 307 1248.8 316.34 1248.8 362.81 1248.8 378 1303 378 1303 307" />
-                <path class="cls-23" d="M1248.8,378.5c0,9.05,12.14,16.39,27.1,16.39s27.1-7.34,27.1-16.39Z" />
-                <path class="cls-24" d="M1303,307.5c0-9.05-12.13-16.39-27.09-16.39s-27.1,7.34-27.1,16.39Z" />
-                <polygon class="cls-25"
-                    points="1459 176 1395.8 176 1395.8 184.16 1395.8 224.73 1395.8 238 1459 238 1459 176" />
-                <polygon class="cls-26"
-                    points="1475 298 1376.8 298 1376.8 347.59 1376.8 594.32 1376.8 675 1475 675 1475 298" />
-                <path class="cls-27" d="M1376.8,675.5c0,25.68,22,46.5,49.1,46.5s49.1-20.82,49.1-46.5Z" />
-                <path class="cls-28" d="M1459,176.5c0-11.32-14.15-20.5-31.6-20.5s-31.6,9.18-31.6,20.5Z" />
-                <path class="cls-29" d="M1395.5,237.5l-19,60h98l-16-60Z" />
-                <text class="cls-20" transform="translate(1420 173.84)">C2</text>
-                <text class="cls-20" transform="translate(1420 636.84)">C1</text>
-                <text class="cls-20" transform="translate(1420 479.84)">K1</text> -->
-            </g>
+            <path class="cls-19"
+                d="M 403.6 571.17 l -10.1 -11 v -77 L 403.6 474 h 63.94 L 481 481.33 V 562 l -16.83 11 S 401.91 571.17 403.6 571.17 Z" />
+            <text class="cls-20" transform="translate(431 90)">E5</text>
+            <!-- !!!!!什么sb东西有默认事件，搞了半天，超，md，cococoaocaoco！！！！！！ -->
+            <circle @mousedown.prevent="handleDown" class="test" cx="100" cy="100" r="40" stroke="black" stroke-width="2"
+                fill="red" />
         </svg>
     </div>
 </template>
@@ -73,22 +53,42 @@ export default {
     name: "layout",
     data() {
         return {
-            down :false
+            down: false,
+            cloneNode:{}
         };
     },
+    props: [],//传递画布的放大缩小倍率
     methods: {
-        handleDown() {
-            this.handleMove()
+        handleDown(e) {
             this.down = true
+            // clone元素
+            this.setPropertiesCloneNode(e.target, e)
+        },
+        setPropertiesCloneNode(node, e) {
+            this.cloneNode = node.cloneNode(true)
+            this.cloneNode.style.transform = 'scale(1.2)'
+            this.cloneNode.style.position = 'fixed'
+            this.cloneNode.setAttribute('cx', e.clientX+20)
+            this.cloneNode.setAttribute('cy', e.clientY+20)
+            this.cloneNode.style.top = '0px'
+            this.cloneNode.style.opacity = .5
+            this.cloneNode.style.zIndex = 99999
+            // 层级问题大概率是因为还是在父级元素中，解决方案是直接一起创建，svg为固定的渲染再body，然后生成的cloneNode直接渲染在里面
+            let svg = document.querySelector('svg')
+            svg.appendChild(this.cloneNode)
         },
         handleMove(e) {
             if (!this.down) return
-            this.$emit('move', e)
-            console.log("move");
+            this.cloneNode.setAttribute('cx',e.clientX)
+            this.cloneNode.setAttribute('cy',e.clientY)
+        },
+        handleUp() {
+            this.down = false
         }
     },
     mounted() {
-
+        document.addEventListener('mousemove', this.handleMove)
+        document.addEventListener('mouseup', this.handleUp)
     }
 };
 </script>
@@ -96,6 +96,7 @@ export default {
 svg {
     width: 100%;
     height: 100vh;
+
 }
 
 .test {

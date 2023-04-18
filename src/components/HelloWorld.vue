@@ -3,7 +3,7 @@
     <div class="layOut">
       <layout dowg></layout>
     </div>
-    <div @mouseover="containerOver($event,true)" @mouseout="containerOver($event,false)" id="container"></div>
+    <div @mouseover="containerOver($event, true)" @mouseout="containerOver($event, false)" id="container"></div>
   </div>
 </template>
 <script>
@@ -57,7 +57,8 @@ export default {
         // width: 800,
         // height: 600,
         panning: true,
-        mousewheel: true,
+        // 这个东西涉及到元素拖入时的大小，后续优化--
+        // mousewheel: true, //禁止画布放大缩小
         grid: true,
         background: {
           color: "#ccc", // 设置画布背景颜色
@@ -126,9 +127,9 @@ export default {
         shape: "custom-node",
       });
     },
-    containerOver(e, flag){
-      console.log(flag)
-      console.log("containerOver--划入");
+    containerOver(e, flag) {
+      // console.log(flag)
+      // console.log("containerOver--划入");
     }
   },
 
@@ -149,5 +150,7 @@ export default {
   height: 100vh;
   flex: 1;
   background-color: rgb(255, 255, 255);
+  z-index: 1;
+  position: relative;
 }
 </style>
