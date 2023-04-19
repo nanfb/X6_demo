@@ -1,50 +1,31 @@
 <template>
     <div>
-        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <defs>
-                <linearGradient id="设备渐变灰色_2" x1="1146.5" y1="-266" x2="1146.5" y2="-353.5"
-                    gradientTransform="translate(747 1670) rotate(-90)" gradientUnits="userSpaceOnUse">
-                    <stop offset="0" stop-color="#818181" />
-                    <stop offset="0.51" stop-color="#bdbdbd" />
-                    <stop offset="1" stop-color="#818181" />
-                </linearGradient>
-                <linearGradient id="设备渐变灰色_2-2" x1="1146.5" y1="-67" x2="1146.5" y2="-154.5" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-3" x1="1248.8" y1="342.5" x2="1303" y2="342.5"
-                    gradientTransform="matrix(1, 0, 0, 1, 0, 0)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-4" x1="1248.8" y1="386.7" x2="1303" y2="386.7"
-                    gradientTransform="matrix(1, 0, 0, 1, 0, 0)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-5" x1="1114.81" y1="1078.09" x2="1169.01" y2="1078.09"
-                    gradientTransform="translate(2417.81 1377.39) rotate(180)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-6" x1="1395.8" y1="207" x2="1459" y2="207"
-                    gradientTransform="matrix(1, 0, 0, 1, 0, 0)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-7" x1="1376.8" y1="486.5" x2="1475" y2="486.5"
-                    gradientTransform="matrix(1, 0, 0, 1, 0, 0)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-8" x1="1376.8" y1="698.75" x2="1475" y2="698.75"
-                    gradientTransform="matrix(1, 0, 0, 1, 0, 0)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-9" x1="958.81" y1="1211.14" x2="1022.01" y2="1211.14"
-                    gradientTransform="translate(2417.81 1377.39) rotate(180)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-10" x1="1376.5" y1="267.5" x2="1474.5" y2="267.5"
-                    gradientTransform="matrix(1, 0, 0, 1, 0, 0)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-11" x1="662" y1="493" x2="671" y2="493"
-                    gradientTransform="translate(-238 -364)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-12" x1="659" y1="482.2" x2="674" y2="482.2"
-                    gradientTransform="translate(-227.2 -353.2)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-13" x1="659" y1="503.8" x2="674" y2="503.8"
-                    gradientTransform="translate(-248.8 -374.8)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-14" x1="640" y1="418" x2="649" y2="418"
-                    gradientTransform="translate(-141 -311)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-15" x1="637" y1="407.2" x2="652" y2="407.2"
-                    gradientTransform="translate(-130.2 -300.2)" xlink:href="#设备渐变灰色_2" />
-                <linearGradient id="设备渐变灰色_2-16" x1="637" y1="428.8" x2="652" y2="428.8"
-                    gradientTransform="translate(-151.8 -321.8)" xlink:href="#设备渐变灰色_2" />
-            </defs>
-            <path class="cls-19"
-                d="M 403.6 571.17 l -10.1 -11 v -77 L 403.6 474 h 63.94 L 481 481.33 V 562 l -16.83 11 S 401.91 571.17 403.6 571.17 Z" />
-            <text class="cls-20" transform="translate(431 90)">E5</text>
-            <!-- !!!!!什么sb东西有默认事件，搞了半天，超，md，cococoaocaoco！！！！！！ -->
-            <circle @mousedown.prevent="handleDown" class="test" cx="100" cy="100" r="40" stroke="black" stroke-width="2"
-                fill="red" />
-        </svg>
+        <!-- 常用组件 -->
+        <div v-for="item in comList" :key="item" class="default_com">
+            <div class="default_title com_title">{{ item }}</div>
+            <div class="default_content">
+                <template v-if="item === '普通组件'">
+                    <div v-for="item in 3" :key="item" class="default_item">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <circle @mousedown.prevent.capture="handleDown" class="test" cx="60" cy="60" r="40"
+                                stroke="black" stroke-width="2" fill="red" />
+                            <!-- <rect x="120" y="120" width="70" height="70" stroke="black" fill="green" stroke-width="5" /> -->
+                        </svg>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="default_item">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g @mousedown.prevent.capture="handleDown">
+                                <circle class="test" cx="50" cy="50" r="30" stroke="black" stroke-width="2"
+                                    fill="rgba(0,0,0,.6)" />
+                                <rect x="22" y="22" width="20" height="20" stroke="black" fill="green" stroke-width="5" />
+                            </g>
+                        </svg>
+                    </div>
+                </template>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -54,54 +35,150 @@ export default {
     data() {
         return {
             down: false,
-            cloneNode:{}
+            cloneNode: {},
+            cloneSvg: {},
+            x: 0,
+            y: 0,
+            left: 0,
+            top: 0,
+            comList: ['普通组件', '特殊组件']
         };
     },
     props: [],//传递画布的放大缩小倍率
     methods: {
+        // 对于合并的g获取到svg
+        getSvg(dom) {
+            let svg = {}
+            if (dom.tagName === 'svg') {
+                svg = dom
+            } else {
+                svg = this.getSvg(dom.parentNode)
+            }
+            return svg
+        },
         handleDown(e) {
             this.down = true
-            // clone元素
-            this.setPropertiesCloneNode(e.target, e)
+            document.addEventListener('mousemove', this.handleMove)
+            document.addEventListener('mouseup', this.handleUp)
+            this.cloneSvg = document.querySelector('svg').cloneNode(false)
+            this.cloneSvg.style.position = 'fixed'
+            this.cloneSvg.style.top = '0px'
+            this.cloneSvg.style.width = '100%'
+            this.cloneSvg.style.height = '100vh'
+            this.cloneSvg.style.zIndex = 99
+            this.cloneSvg.style.pointerEvents = 'none' //很关键的一个属性
+            const group = e.target.closest('g');
+            if (group) {
+                this.setPropertiesCloneNode(group, e)
+            } else {
+                // clone元素
+                this.setPropertiesCloneNode(e.target, e)
+            }
         },
         setPropertiesCloneNode(node, e) {
             this.cloneNode = node.cloneNode(true)
-            this.cloneNode.style.transform = 'scale(1.2)'
             this.cloneNode.style.position = 'fixed'
-            this.cloneNode.setAttribute('cx', e.clientX+20)
-            this.cloneNode.setAttribute('cy', e.clientY+20)
-            this.cloneNode.style.top = '0px'
             this.cloneNode.style.opacity = .5
-            this.cloneNode.style.zIndex = 99999
-            // 层级问题大概率是因为还是在父级元素中，解决方案是直接一起创建，svg为固定的渲染再body，然后生成的cloneNode直接渲染在里面
-            let svg = document.querySelector('svg')
-            svg.appendChild(this.cloneNode)
+            // this.cloneNode.style.transform = `scale(1.2)`
+            let svg = this.getSvg(node)
+            this.left = e.target.getBoundingClientRect().left - svg.getBoundingClientRect().left
+            this.top = e.target.getBoundingClientRect().top - svg.getBoundingClientRect().top
+            this.cloneSvg.appendChild(this.cloneNode)
+            document.body.appendChild(this.cloneSvg)
+
+            this.getcoordinate(e)
+        },
+        // 计算偏移量
+        getcoordinate(e) {
+            this.x = e.clientX - (this.cloneNode.getBoundingClientRect().width / 2) - this.left
+            this.y = e.clientY - (this.cloneNode.getBoundingClientRect().height / 2) - this.top
+            this.cloneNode.setAttribute('transform', `translate(${this.x}, ${this.y})`);
         },
         handleMove(e) {
             if (!this.down) return
-            this.cloneNode.setAttribute('cx',e.clientX)
-            this.cloneNode.setAttribute('cy',e.clientY)
+            this.getcoordinate(e)
+            // 触发父级事件
+            this.$emit('cloneNodeMove', [e.clientX, e.clientY])
         },
         handleUp() {
             this.down = false
+            this.cloneNode.removeAttribute('style')
+            this.$emit('cloneNodeUp', this.cloneNode)
+            this.reset()
+        },
+        reset() {
+            this.cloneNode.removeEventListener('mousedown', this.handleDown)
+            document.removeEventListener('mousemove', this.handleMove)
+            document.removeEventListener('mouseup', this.handleUp)
+            this.cloneSvg.remove()
+            this.down = false
+            this.cloneNode = {}
+            this.cloneSvg = {}
+            this.x = 0
+            this.y = 0
+            this.left = 0
+            this.top = 0
+            this.comList = ['普通组件', '特殊组件']
+
         }
     },
     mounted() {
-        document.addEventListener('mousemove', this.handleMove)
-        document.addEventListener('mouseup', this.handleUp)
+
     }
 };
 </script>
-<style  scoped>
+<style lang="less" scoped>
+/* 布局 */
 svg {
+    width: 200px;
+    height: 200px;
+}
+
+.com_title {
     width: 100%;
-    height: 100vh;
-
+    height: 30px;
+    background-color: #5b5656;
+    cursor: pointer;
+    text-align: center;
+    line-height: 30px;
+    color: aquamarine;
 }
 
-.test {
+.default_com {
+    width: 100%;
+
+    .default_content {
+        width: 100%;
+        height: 300px;
+        display: flex;
+        flex-wrap: wrap;
+        background-color: #b7db33;
+        overflow: auto;
+        align-content: flex-start;
+
+        .default_item {
+            width: 50%;
+            height: 120px;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            background: #15b15d;
+
+            svg {
+                width: 100%;
+
+                height: 100%;
+
+                * {
+                    cursor: move;
+                }
+            }
+        }
+    }
+}
+
+/* g {
     cursor: move;
-}
+} */
 </style >
 <style scoped>
 .cls-49 {

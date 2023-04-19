@@ -1,19 +1,32 @@
 <template>
   <div style="display:flex">
     <div class="layOut">
-      <layout dowg></layout>
+      <layout @cloneNodeMove="cloneNodeMove" @cloneNodeUp="cloneNodeUp"></layout>
     </div>
-    <div @mouseover="containerOver($event, true)" @mouseout="containerOver($event, false)" id="container"></div>
+    <div @mouseover="containerOver($event, true)" @mouseout="containerOver($event, false)" id="container">
+
+
+    </div>
+    <!-- 功能区 -->
+    <div class="action_list">
+      <actionButton @action="handleAction"></actionButton>
+
+    </div>
+    <!-- 节点调整区 -->
+    <div>
+
+    </div>
   </div>
 </template>
 <script>
-import { Graph } from "@antv/x6";
-import { Addon } from "@antv/x6";
+import { Graph, Node } from "@antv/x6";
 import layout from "./layout";
+import actionButton from "./ActionButton";
 export default {
   name: "HelloWorld",
   components: {
     layout,
+    actionButton
   },
   data() {
     return {
@@ -21,11 +34,11 @@ export default {
       nodes: [
         {
           id: "node1", // String，可选，节点的唯一标识
-          x: 0, // Number，必选，节点位置的 x 值
-          y: 0, // Number，必选，节点位置的 y 值
+          x: 10, // Number，必选，节点位置的 x 值
+          y: 10, // Number，必选，节点位置的 y 值
           width: 80, // Number，可选，节点大小的 width 值
           height: 40, // Number，可选，节点大小的 height 值
-          label: "hello", // String，节点标签
+          label: "111", // String，节点标签
         },
         {
           id: "node2",
@@ -33,21 +46,22 @@ export default {
           y: 100,
           width: 80,
           height: 40,
-          label: "zzz",
+          label: "222",
         },
       ],
-      // 边
+      // line
       edges: [
-        // {
-        //   source: "node1", // String，必须，起始节点 id
-        // },
         {
           source: "node1", // String，必须，起始节点 id
           target: "node2", // String，必须，目标节点 id
         },
       ],
       graph: {}, //画布
+      isEnter: false, //是否进入画布
+      cloneNodeSite: [],//克隆节点的位置
+      nodeAttributes: [],//节点属性
     };
+
   },
   methods: {
     // 初始化节点
@@ -63,6 +77,7 @@ export default {
         background: {
           color: "#ccc", // 设置画布背景颜色
         },
+
       });
       this.graph.fromJSON({
         nodes: this.nodes,
@@ -128,8 +143,82 @@ export default {
       });
     },
     containerOver(e, flag) {
-      // console.log(flag)
-      // console.log("containerOver--划入");
+      this.isEnter = flag;
+    },
+
+    // 事件
+    cloneNodeMove(...arg) {
+      this.cloneNodeSite = arg;
+    },
+
+    cloneNodeUp(cloneNode) {
+      if (this.isEnter) {
+        // 父节点位移信息
+        this.transform = cloneNode.getAttribute('transform')
+        let newNode = this.clearAttribute(cloneNode)
+        // 创建节点
+        this.createNode(newNode);
+        this.nodeAttributes = []
+      }
+    },
+    // 获取节点属性
+    getClondeNodeAttributes(cloneNode) {
+
+      let getAttrs = (node) => {
+        let attrs = {}
+        for (let item of (node.attributes)) {
+          attrs[item.name] = item.value
+        }
+        attrs.transform = this.transform
+        let attribute = {
+          tagName: node.tagName,
+          groupSelector: node.tagName,
+          attrs: attrs
+        }
+        return attribute
+      }
+
+      if (cloneNode.hasChildNodes()) {
+        for (let node of cloneNode.childNodes) {
+          node.tagName === 'g' ? this.getClondeNodeAttributes(cloneNode.children) : ''
+          this.nodeAttributes.push(getAttrs(node))
+        }
+      } else {
+        cloneNode.tagName === 'g' ? this.getClondeNodeAttributes(cloneNode.children) : ''
+        this.nodeAttributes.push(getAttrs(cloneNode))
+      }
+    },
+
+    createNode(cloneNode) {
+      this.getClondeNodeAttributes(cloneNode)
+      Graph.registerNode(
+        "clone-node",
+        {
+          markup: this.nodeAttributes,
+          attrs: {
+            // 'rect': {
+            //   fill: "#730000",
+            // },
+          },
+        },
+        true
+      );
+
+      let node = this.graph.addNode({
+        x: -270,
+        y: 0,
+        shape: "clone-node",
+      });
+      // console.log(node.resize(10000, 1000), 'jiedian')
+    },
+    // 清除不必要的属性
+    clearAttribute(node) {
+      return node
+    },
+    // 按钮处理
+    handleAction(type) {
+
+
     }
   },
 
@@ -142,7 +231,8 @@ export default {
 .layOut {
   height: 100vh;
   width: 16%;
-  background-color: rgb(247, 113, 113);
+  overflow: hidden;
+  background-color: rgb(45, 175, 211);
 }
 
 #container {
@@ -152,5 +242,12 @@ export default {
   background-color: rgb(255, 255, 255);
   z-index: 1;
   position: relative;
+}
+
+.action_list {
+  position: fixed;
+  top: 10px;
+  left: calc(16% + 10px);
+  z-index: 99;
 }
 </style>
