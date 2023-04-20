@@ -17,13 +17,11 @@ export default {
 
         }
     },
-    methods:{
-        action(type){
+    methods: {
+        action(type) {
             this.$emit('action', type)
         }
     }
 }
 </script>
-<style>
-
-</style>
+<style></style>

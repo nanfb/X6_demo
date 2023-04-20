@@ -3,22 +3,27 @@
         <!-- 常用组件 -->
         <div v-for="item in comList" :key="item" class="default_com">
             <div class="default_title com_title">{{ item }}</div>
-            <div class="default_content">
-                <template v-if="item === '普通组件'">
+            <div class="default_content" @mousedown.prevent.capture="handleDown">
+                <template v-if="item === '通用节点'">
                     <div v-for="item in 3" :key="item" class="default_item">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <circle @mousedown.prevent.capture="handleDown" class="test" cx="60" cy="60" r="40"
-                                stroke="black" stroke-width="2" fill="red" />
+                            <circle class="test" cx="45" cy="45" r="40" stroke="black" stroke-width="2" fill="red" />
                             <!-- <rect x="120" y="120" width="70" height="70" stroke="black" fill="green" stroke-width="5" /> -->
+                        </svg>
+                    </div>
+                    <div class="default_item">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <rect x="0" y="0" width="100" stroke="red" stroke-width="5" height="100" fill="#987281">
+                            </rect>
                         </svg>
                     </div>
                 </template>
                 <template v-else>
                     <div class="default_item">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <g @mousedown.prevent.capture="handleDown">
+                            <g>
                                 <circle class="test" cx="50" cy="50" r="30" stroke="black" stroke-width="2"
-                                    fill="rgba(0,0,0,.6)" />
+                                    fill="rgba(0,0,0,0)" />
                                 <rect x="22" y="22" width="20" height="20" stroke="black" fill="green" stroke-width="5" />
                             </g>
                         </svg>
@@ -41,7 +46,7 @@ export default {
             y: 0,
             left: 0,
             top: 0,
-            comList: ['普通组件', '特殊组件']
+            comList: ['通用节点', '特殊节点']
         };
     },
     props: [],//传递画布的放大缩小倍率
@@ -56,7 +61,7 @@ export default {
             }
             return svg
         },
-        handleDown(e) {
+        handleDown(e) { //使用事件代理来做
             this.down = true
             document.addEventListener('mousemove', this.handleMove)
             document.addEventListener('mouseup', this.handleUp)
@@ -68,36 +73,31 @@ export default {
             this.cloneSvg.style.zIndex = 99
             this.cloneSvg.style.pointerEvents = 'none' //很关键的一个属性
             const group = e.target.closest('g');
-            if (group) {
+            if (group) { //对于合并g元素进行处理
                 this.setPropertiesCloneNode(group, e)
             } else {
-                // clone元素
                 this.setPropertiesCloneNode(e.target, e)
             }
         },
         setPropertiesCloneNode(node, e) {
             this.cloneNode = node.cloneNode(true)
-            this.cloneNode.style.position = 'fixed'
             this.cloneNode.style.opacity = .5
-            // this.cloneNode.style.transform = `scale(1.2)`
             let svg = this.getSvg(node)
             this.left = e.target.getBoundingClientRect().left - svg.getBoundingClientRect().left
             this.top = e.target.getBoundingClientRect().top - svg.getBoundingClientRect().top
             this.cloneSvg.appendChild(this.cloneNode)
             document.body.appendChild(this.cloneSvg)
-
             this.getcoordinate(e)
         },
         // 计算偏移量
         getcoordinate(e) {
             this.x = e.clientX - (this.cloneNode.getBoundingClientRect().width / 2) - this.left
             this.y = e.clientY - (this.cloneNode.getBoundingClientRect().height / 2) - this.top
-            this.cloneNode.setAttribute('transform', `translate(${this.x}, ${this.y})`);
+            this.cloneNode.setAttribute('transform', `translate(${this.x}, ${this.y})`); //比例
         },
         handleMove(e) {
             if (!this.down) return
             this.getcoordinate(e)
-            // 触发父级事件
             this.$emit('cloneNodeMove', [e.clientX, e.clientY])
         },
         handleUp() {
@@ -118,8 +118,6 @@ export default {
             this.y = 0
             this.left = 0
             this.top = 0
-            this.comList = ['普通组件', '特殊组件']
-
         }
     },
     mounted() {
@@ -129,10 +127,6 @@ export default {
 </script>
 <style lang="less" scoped>
 /* 布局 */
-svg {
-    width: 200px;
-    height: 200px;
-}
 
 .com_title {
     width: 100%;
@@ -148,6 +142,8 @@ svg {
     width: 100%;
 
     .default_content {
+        padding: 10px;
+        box-sizing: border-box;
         width: 100%;
         height: 300px;
         display: flex;
@@ -158,16 +154,15 @@ svg {
 
         .default_item {
             width: 50%;
-            height: 120px;
+            padding: 5px;
+            height: 110px;
             border: 1px solid #000;
             box-sizing: border-box;
-            background: #15b15d;
+            background: #ffffff;
 
             svg {
-                width: 100%;
-
-                height: 100%;
-
+                width: 100px;
+                height: 100px;
                 * {
                     cursor: move;
                 }
